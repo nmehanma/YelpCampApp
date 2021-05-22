@@ -50,7 +50,6 @@ const validateCampground = (req, res, next) => {
 
 const validateReview = (req, res, next) => {
   const { error } = reviewSchema.validate(req.body);
-  console.log(req.body)
   if (error) {
     const msg = error.details.map(el => el.message).join(',')
     throw new ExpressError(msg, 400);
@@ -113,6 +112,15 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
   await review.save();
   await campground.save();
   res.redirect(`/campgrounds/${campground._id}`);
+
+}))
+
+//reviewId being used beccause we want to remove the reference to the revie in the campground and we want to remove the review itself 
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req,res) => {
+  const {id, reviewId} = req.params;
+  await Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}})
+  await Review.findByIdAndDelete(reviewId);
+  res.redirect(`/campgrounds/${id}`);
 
 }))
 
