@@ -6,6 +6,9 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
 
 
@@ -56,12 +59,27 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(flash());
 
+//Authorization middleware using passport library
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+//storing and unstoring User
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 //every request, take whatever is in the flash and have access to it under the locals success
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
 });
+
+app.get('/fakeUser', async(req,res) => {
+  const user = new User({email: 'colt@gmail.com', username: 'colt'})
+  const newUser = await User.register(user, 'chicken')
+  res.send(newUser);
+})
 
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
