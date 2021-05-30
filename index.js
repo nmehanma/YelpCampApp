@@ -14,9 +14,11 @@ const User = require('./models/user');
 
 
 
-//routes
-const campgrounds = require('./routes/campgrounds');
-const reviews = require('./routes/reviews');
+//routes for mini apps that are linkedto index
+
+const userRoutes = require('./routes/users')
+const campgroundsRoutes = require('./routes/campgrounds');
+const reviewsRoutes = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp-app', {
   useNewUrlParser: true,
@@ -81,8 +83,9 @@ app.get('/fakeUser', async(req,res) => {
   res.send(newUser);
 })
 
-app.use('/campgrounds', campgrounds)
-app.use('/campgrounds/:id/reviews', reviews)
+app.use('/', userRoutes);
+app.use('/campgrounds', campgroundsRoutes)
+app.use('/campgrounds/:id/reviews', reviewsRoutes)
 
 
 app.get('/', (req, res) => {
