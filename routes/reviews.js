@@ -4,13 +4,15 @@ const router = express.Router({ mergeParams: true });
 const catchAsync = require('../utils/catchAsync');
 const Campground = require('../models/campground');
 const Review = require('../models/review')
-const { validateReview } = require('../middleware')
+const { validateReview, isLoggedIn } = require('../middleware')
 
+//creating  new review
 
-
-router.post('/', validateReview, catchAsync(async (req, res) => {
+router.post('/', isLoggedIn, validateReview, catchAsync(async (req, res) => {
   const campground = await Campground.findById(req.params.id);
+  console.log("HEREEEEEEEEEE")
   const review = new Review(req.body.review);
+  review.author = req.user._id;
   campground.reviews.push(review);
   await review.save();
   await campground.save();
@@ -19,7 +21,7 @@ router.post('/', validateReview, catchAsync(async (req, res) => {
 
 }))
 
-//reviewId being used beccause we want to remove the reference to the revie in the campground and we want to remove the review itself 
+//reviewId being used beccause we want to remove the reference to the review in the campground and we want to remove the review itself 
 router.delete('/:reviewId', catchAsync(async (req, res) => {
   const { id, reviewId } = req.params;
   await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } })
