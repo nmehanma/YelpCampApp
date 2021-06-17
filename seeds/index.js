@@ -34,6 +34,8 @@ const seedDB = async () => {
       author: '60b5a64e60ce095bdb868a93',
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
+      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste eaque laboriosam fugit cum sequi beatae itaque molestiae aliquid illo, ex voluptate vel assumenda corporis rem ab ipsum odit earum quidem?',
+      price,
       images: [
         {
           url:
@@ -46,8 +48,6 @@ const seedDB = async () => {
           filename: 'YelpCamp/atzod9rene7r12frxlb2'
         }
       ],
-      description: 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste eaque laboriosam fugit cum sequi beatae itaque molestiae aliquid illo, ex voluptate vel assumenda corporis rem ab ipsum odit earum quidem?',
-      price
 
 
     });
